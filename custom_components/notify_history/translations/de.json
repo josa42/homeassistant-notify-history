@@ -11,7 +11,7 @@
           "max_age_days": "Nachrichten aufbewahren für"
         },
         "data_description": {
-          "name": "Benennt auch den Dienst notify.<name>, den der Proxy anlegt.",
+          "name": "Benennt auch den Notify-Dienst, den der Proxy anlegt, z. B. notify.familie für Familie.",
           "notify_entities": "Erhalten Nachricht und Titel.",
           "notify_services": "Legacy-Notify-Dienste, z. B. die Companion App. Erhalten zusätzlich data und target.",
           "max_age_days": "Ältere Nachrichten werden gelöscht."

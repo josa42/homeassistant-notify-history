@@ -11,7 +11,7 @@
           "max_age_days": "Keep messages for"
         },
         "data_description": {
-          "name": "Also names the notify.<name> service the proxy registers.",
+          "name": "Also names the notify service the proxy registers, e.g. notify.family for Family.",
           "notify_entities": "Receive the message and the title.",
           "notify_services": "Legacy notify services, e.g. the Companion App. Also receive data and target.",
           "max_age_days": "Older messages are deleted."
