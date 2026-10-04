@@ -1,0 +1,13 @@
+config/*
+!config/.gitkeep
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+.ruff_cache/

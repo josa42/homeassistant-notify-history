@@ -1,0 +1,20 @@
+# Wider than ruff's 88-char default, the same as the other josa42 Home Assistant
+# repos.
+line-length = 110
+
+[lint]
+select = [
+    "E",  # pycodestyle
+    "F",  # pyflakes
+    "I",  # isort
+]
+ignore = []
+
+[lint.per-file-ignores]
+"tests/*" = ["E501"]
+
+# Match Home Assistant core's import style so the linter agrees with the code
+# the integration is written against.
+[lint.isort]
+force-sort-within-sections = true
+combine-as-imports = true
