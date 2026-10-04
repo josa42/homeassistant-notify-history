@@ -45,7 +45,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [Platform.NOTIFY]
 
 CARD_URL_PATH = "/notify-history/notify-history-card.js"
-CARD_VERSION = "0.0.0"
+CARD_VERSION = "0.1.0"
 
 PRUNE_INTERVAL = timedelta(hours=1)
 

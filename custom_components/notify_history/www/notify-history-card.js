@@ -1,4 +1,4 @@
-const CARD_VERSION = "0.0.0";
+const CARD_VERSION = "0.1.0";
 
 const DOMAIN = "notify_history";
 const DEFAULT_MAX_ITEMS = 20;
