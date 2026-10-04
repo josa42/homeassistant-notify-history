@@ -1,0 +1,10 @@
+{
+  "services": {
+    "delete": {
+      "service": "mdi:message-minus-outline"
+    },
+    "clear": {
+      "service": "mdi:delete-sweep-outline"
+    }
+  }
+}

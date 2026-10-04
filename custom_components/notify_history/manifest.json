@@ -1,0 +1,13 @@
+{
+  "domain": "notify_history",
+  "name": "Notify History",
+  "codeowners": ["@josa42"],
+  "config_flow": true,
+  "dependencies": ["frontend", "http", "notify", "websocket_api"],
+  "documentation": "https://github.com/josa42/homeassistant-notify-history",
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/josa42/homeassistant-notify-history/issues",
+  "requirements": [],
+  "version": "0.0.0"
+}

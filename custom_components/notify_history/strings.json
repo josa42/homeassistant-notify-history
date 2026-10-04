@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add notify history",
+        "description": "Sends every message to all selected targets and keeps a history of it.",
+        "data": {
+          "name": "Name",
+          "notify_entities": "Notify entities",
+          "notify_services": "Notify services",
+          "max_age_days": "Keep messages for"
+        },
+        "data_description": {
+          "name": "Also names the notify.<name> service the proxy registers.",
+          "notify_entities": "Receive the message and the title.",
+          "notify_services": "Legacy notify services, e.g. the Companion App. Also receive data and target.",
+          "max_age_days": "Older messages are deleted."
+        }
+      }
+    },
+    "error": {
+      "no_targets": "Select at least one notify entity or notify service.",
+      "name_taken": "A notify service with this name already exists."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "notify_entities": "Notify entities",
+          "notify_services": "Notify services",
+          "max_age_days": "Keep messages for"
+        },
+        "data_description": {
+          "notify_entities": "Receive the message and the title.",
+          "notify_services": "Legacy notify services, e.g. the Companion App. Also receive data and target.",
+          "max_age_days": "Older messages are deleted."
+        }
+      }
+    },
+    "error": {
+      "no_targets": "Select at least one notify entity or notify service."
+    }
+  },
+  "services": {
+    "delete": {
+      "name": "Delete message",
+      "description": "Deletes one message from the history.",
+      "fields": {
+        "message_id": {
+          "name": "Message ID",
+          "description": "The id of the message to delete."
+        }
+      }
+    },
+    "clear": {
+      "name": "Clear history",
+      "description": "Deletes all messages from the history."
+    }
+  },
+  "exceptions": {
+    "all_targets_failed": {
+      "message": "Sending failed for every target: {errors}"
+    },
+    "message_not_found": {
+      "message": "No message with the id {message_id}."
+    }
+  },
+  "common": {
+    "card_empty": "No messages yet.",
+    "card_load_more": "Load more",
+    "card_delete": "Delete",
+    "card_more_actions": "More actions",
+    "card_failed_targets": "Failed: {targets}",
+    "card_sent_to": "Sent to: {targets}",
+    "card_not_found": "{entity} is not a notify history proxy.",
+    "card_editor_entity": "Notify history proxy",
+    "card_editor_max_items": "Messages per page",
+    "card_editor_show_targets": "Show targets"
+  }
+}

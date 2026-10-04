@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Notify History hinzufügen",
+        "description": "Schickt jede Nachricht an alle ausgewählten Ziele und speichert einen Verlauf.",
+        "data": {
+          "name": "Name",
+          "notify_entities": "Notify-Entitäten",
+          "notify_services": "Notify-Dienste",
+          "max_age_days": "Nachrichten aufbewahren für"
+        },
+        "data_description": {
+          "name": "Benennt auch den Dienst notify.<name>, den der Proxy anlegt.",
+          "notify_entities": "Erhalten Nachricht und Titel.",
+          "notify_services": "Legacy-Notify-Dienste, z. B. die Companion App. Erhalten zusätzlich data und target.",
+          "max_age_days": "Ältere Nachrichten werden gelöscht."
+        }
+      }
+    },
+    "error": {
+      "no_targets": "Wähle mindestens eine Notify-Entität oder einen Notify-Dienst.",
+      "name_taken": "Es gibt schon einen Notify-Dienst mit diesem Namen."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "notify_entities": "Notify-Entitäten",
+          "notify_services": "Notify-Dienste",
+          "max_age_days": "Nachrichten aufbewahren für"
+        },
+        "data_description": {
+          "notify_entities": "Erhalten Nachricht und Titel.",
+          "notify_services": "Legacy-Notify-Dienste, z. B. die Companion App. Erhalten zusätzlich data und target.",
+          "max_age_days": "Ältere Nachrichten werden gelöscht."
+        }
+      }
+    },
+    "error": {
+      "no_targets": "Wähle mindestens eine Notify-Entität oder einen Notify-Dienst."
+    }
+  },
+  "services": {
+    "delete": {
+      "name": "Nachricht löschen",
+      "description": "Löscht eine Nachricht aus dem Verlauf.",
+      "fields": {
+        "message_id": {
+          "name": "Nachrichten-ID",
+          "description": "Die ID der zu löschenden Nachricht."
+        }
+      }
+    },
+    "clear": {
+      "name": "Verlauf leeren",
+      "description": "Löscht alle Nachrichten aus dem Verlauf."
+    }
+  },
+  "exceptions": {
+    "all_targets_failed": {
+      "message": "Senden ist an allen Zielen fehlgeschlagen: {errors}"
+    },
+    "message_not_found": {
+      "message": "Keine Nachricht mit der ID {message_id}."
+    }
+  },
+  "common": {
+    "card_empty": "Noch keine Nachrichten.",
+    "card_load_more": "Mehr laden",
+    "card_delete": "Löschen",
+    "card_more_actions": "Weitere Aktionen",
+    "card_failed_targets": "Fehlgeschlagen: {targets}",
+    "card_sent_to": "Gesendet an: {targets}",
+    "card_not_found": "{entity} ist kein Notify-History-Proxy.",
+    "card_editor_entity": "Notify-History-Proxy",
+    "card_editor_max_items": "Nachrichten pro Seite",
+    "card_editor_show_targets": "Ziele anzeigen"
+  }
+}

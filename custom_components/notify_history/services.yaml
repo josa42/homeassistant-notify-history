@@ -1,0 +1,15 @@
+delete:
+  target:
+    entity:
+      integration: notify_history
+      domain: notify
+  fields:
+    message_id:
+      required: true
+      selector:
+        text:
+clear:
+  target:
+    entity:
+      integration: notify_history
+      domain: notify
