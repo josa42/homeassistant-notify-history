@@ -132,6 +132,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: NotifyHistoryConfigEntr
         return False
     if entry.runtime_data.service_name is not None:
         hass.services.async_remove(NOTIFY_DOMAIN, entry.runtime_data.service_name)
+    entry.runtime_data.proxy.history.async_close()
     await entry.runtime_data.proxy.history.async_flush()
     return True
 

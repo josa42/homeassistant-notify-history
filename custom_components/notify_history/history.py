@@ -27,6 +27,8 @@ class NotifyHistory:
     - {"event": "added", "message": <message>}
     - {"event": "removed", "ids": [<id>, ...]}
     - {"event": "cleared"}
+    - {"event": "closed"} when the proxy unloads, e.g. to apply new options;
+      subscribe again to follow the reloaded proxy.
     """
 
     def __init__(self, hass: HomeAssistant, entry_id: str, max_age_days: int) -> None:
@@ -42,6 +44,11 @@ class NotifyHistory:
 
     async def async_flush(self) -> None:
         await self._store.async_save(self._data())
+
+    @callback
+    def async_close(self) -> None:
+        self._notify({"event": "closed"})
+        self._listeners.clear()
 
     async def async_remove(self) -> None:
         await self._store.async_remove()
@@ -93,7 +100,8 @@ class NotifyHistory:
 
         @callback
         def unsubscribe() -> None:
-            self._listeners.remove(listener)
+            if listener in self._listeners:
+                self._listeners.remove(listener)
 
         return unsubscribe
 

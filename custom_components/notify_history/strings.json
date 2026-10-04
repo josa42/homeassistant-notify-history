@@ -75,6 +75,7 @@
     "card_sent_to": "Sent to: {targets}",
     "card_not_found": "{entity} is not a notify history proxy.",
     "card_editor_entity": "Notify history proxy",
+    "card_editor_title": "Title",
     "card_editor_max_items": "Messages per page",
     "card_editor_show_targets": "Show targets"
   }

@@ -68,3 +68,16 @@ async def test_subscribe_pushes_changes(hass: HomeAssistant, targets: Targets, s
 
     await hass.services.async_call("notify_history", "clear", {"entity_id": "notify.family"}, blocking=True)
     assert (await client.receive_json())["event"] == {"event": "cleared"}
+
+
+async def test_subscribe_reports_an_unload(
+    hass: HomeAssistant, targets: Targets, setup_entry, hass_ws_client
+):
+    entry = await setup_entry()
+    client = await hass_ws_client(hass)
+    await client.send_json_auto_id({"type": "notify_history/subscribe", "entity_id": "notify.family"})
+    assert (await client.receive_json())["success"]
+
+    assert await hass.config_entries.async_reload(entry.entry_id)
+
+    assert (await client.receive_json())["event"] == {"event": "closed"}
