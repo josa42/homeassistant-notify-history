@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **A warning when `data` or `target` cannot reach a target.** Notify
+  entities only take a message and a title, so a proxy now logs which entity
+  targets missed the `data` or `target` of a `notify.<name>` call, such as a
+  Companion App image.
+
 ## 0.1.0 - 2026-10-04
 
 ### Added

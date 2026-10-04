@@ -44,6 +44,8 @@ Targets and retention can be changed later from the proxy's **Configure** dialog
 | `notify.<name>` | `message`, `title` | `message`, `title`, `data`, `target` |
 | `notify.send_message` | `message`, `title` | `message`, `title` |
 
+For Companion App features such as images, actions or links, add the phone's `notify.mobile_app_<device>` service as a target, not its notify entity. A proxy logs a warning when a call's `data` or `target` cannot reach an entity target.
+
 All targets are called at once. When one fails, the others still get the message and the failure is recorded with it. The action only fails when every target failed.
 
 If a notify service with the proxy's name already exists, the proxy skips registering `notify.<name>` and logs a warning. The notify entity works either way.

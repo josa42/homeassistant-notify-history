@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.util import dt as dt_util
@@ -62,6 +64,49 @@ async def test_legacy_service_forwards_data_and_target_to_services_only(
     assert message["data"] == {"tag": "door"}
     # The entity reports the last message, whichever way it was sent.
     assert dt_util.parse_datetime(hass.states.get("notify.family").state) is not None
+
+
+def _warnings(caplog: pytest.LogCaptureFixture) -> list[str]:
+    return [
+        r.getMessage()
+        for r in caplog.records
+        if r.name.startswith("custom_components.notify_history") and r.levelno == logging.WARNING
+    ]
+
+
+async def test_data_for_entity_targets_logs_a_warning(
+    hass: HomeAssistant, targets: Targets, setup_entry, caplog: pytest.LogCaptureFixture
+):
+    await setup_entry()
+
+    await hass.services.async_call(
+        "notify", "family", {"message": "Door open", "data": {"image": "/local/door.jpg"}}, blocking=True
+    )
+
+    assert targets.tv.sent == [{"message": "Door open", "title": None}]
+    [warning] = _warnings(caplog)
+    assert "notify.tv" in warning
+
+
+@pytest.mark.parametrize(
+    ("entities", "data"),
+    [(None, None), ([], {"tag": "door"})],
+    ids=["without data", "without entity targets"],
+)
+async def test_no_warning_when_nothing_is_dropped(
+    hass: HomeAssistant,
+    targets: Targets,
+    setup_entry,
+    caplog: pytest.LogCaptureFixture,
+    entities: list[str] | None,
+    data: dict | None,
+):
+    await setup_entry(entities=entities)
+
+    call = {"message": "Hi"} | ({"data": data} if data else {})
+    await hass.services.async_call("notify", "family", call, blocking=True)
+
+    assert _warnings(caplog) == []
 
 
 async def test_one_failing_target_is_recorded_without_raising(

@@ -54,6 +54,15 @@ class NotifyProxy:
         Raises only when every target failed: one unreachable phone should not
         stop the automation that notifies three.
         """
+        if (data or target) and self.notify_entities:
+            # notify.send_message has no data or target field, so entity
+            # targets cannot get them. Say so instead of dropping them silently.
+            _LOGGER.warning(
+                "data and target are not passed to notify entities (%s); add a notify service "
+                "such as notify.mobile_app_<device> as a target to send them",
+                ", ".join(self.notify_entities),
+            )
+
         calls: list[tuple[dict[str, str], Any]] = []
         for entity_id in self.notify_entities:
             payload: dict[str, Any] = {ATTR_ENTITY_ID: entity_id, ATTR_MESSAGE: message}
