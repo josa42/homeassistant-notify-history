@@ -5,12 +5,15 @@ const DEFAULT_MAX_ITEMS = 20;
 // After an unload (e.g. new options) the proxy comes back a moment later.
 const RESUBSCRIBE_DELAYS = [500, 1000, 2000, 5000, 10000];
 const TICK_MS = 60 * 1000;
+// Signed image URLs stay valid this long; the card keeps the loaded <img>.
+const SIGN_EXPIRES_S = 24 * 60 * 60;
 
 const EN_FALLBACK = {
   "component.notify_history.common.card_empty": "No messages yet.",
   "component.notify_history.common.card_load_more": "Load more",
   "component.notify_history.common.card_delete": "Delete",
   "component.notify_history.common.card_more_actions": "More actions",
+  "component.notify_history.common.card_image": "Attached image",
   "component.notify_history.common.card_failed_targets": "Failed: {targets}",
   "component.notify_history.common.card_sent_to": "Sent to: {targets}",
   "component.notify_history.common.card_not_found":
@@ -70,6 +73,19 @@ function _targetLabel(hass, target) {
   return target.id;
 }
 
+// The image of a Companion App notification: `data.image`, or an iOS
+// `data.attachment` that is not audio or video.
+function _imageUrl(message) {
+  const data = message.data || {};
+  let url = data.image;
+  if (!url && data.attachment && typeof data.attachment === "object") {
+    const type = String(data.attachment["content-type"] || "");
+    if (!/^(audio|video)\b/.test(type)) url = data.attachment.url;
+  }
+  if (typeof url !== "string") return null;
+  return url.startsWith("/") || /^https?:\/\//i.test(url) ? url : null;
+}
+
 function _isProxy(hass, entityId) {
   const entry = hass && hass.entities && hass.entities[entityId];
   return Boolean(entry && entry.platform === DOMAIN);
@@ -121,6 +137,16 @@ const STYLE = `
     overflow: hidden;
   }
   .message.expanded { display: block; -webkit-line-clamp: unset; }
+  .image {
+    display: block;
+    margin-top: 6px;
+    max-width: 100%;
+    max-height: 96px;
+    border-radius: var(--ha-border-radius-md, 8px);
+    cursor: pointer;
+  }
+  .image.expanded { max-height: none; }
+  .image[hidden] { display: none; }
   .meta {
     margin-top: 2px;
     font-size: var(--ha-font-size-s, 0.875rem);
@@ -189,6 +215,8 @@ class NotifyHistoryCard extends HTMLElement {
     this._messages = [];
     this._hasMore = false;
     this._expanded = new Set();
+    // message id -> { url, img }: one <img> per message, kept across renders.
+    this._images = new Map();
     this._openMenu = null;
     this._error = null;
     this._onDocumentClick = (e) => {
@@ -377,6 +405,8 @@ class NotifyHistoryCard extends HTMLElement {
     const focused = this.shadowRoot.activeElement;
     const focusKey = focused && focused.dataset && focused.dataset.focusKey;
     this._card.replaceChildren(...children);
+    const ids = new Set(this._messages.map((m) => m.id));
+    for (const id of this._images.keys()) if (!ids.has(id)) this._images.delete(id);
     if (focusKey) {
       const again = this._card.querySelector(`[data-focus-key="${focusKey}"]`);
       if (again) again.focus();
@@ -396,17 +426,19 @@ class NotifyHistoryCard extends HTMLElement {
     }
 
     const expanded = this._expanded.has(message.id);
+    const toggle = () => {
+      if (expanded) this._expanded.delete(message.id);
+      else this._expanded.add(message.id);
+      this._render();
+    };
     const body = _el("div", { class: "body" }, [
       message.title ? _el("div", { class: "title", text: message.title }) : null,
       _el("div", {
         class: expanded ? "message expanded" : "message",
         text: message.message,
-        onclick: () => {
-          if (expanded) this._expanded.delete(message.id);
-          else this._expanded.add(message.id);
-          this._render();
-        },
+        onclick: toggle,
       }),
+      this._renderImage(message, expanded),
       _el("div", {
         class: "meta",
         text: meta.join(" · "),
@@ -466,6 +498,41 @@ class NotifyHistoryCard extends HTMLElement {
       : null;
 
     return _el("div", { class: "item" }, [body, failedIcon, menuButton, menu]);
+  }
+
+  // Paths on Home Assistant need auth an <img> cannot send, so they are signed
+  // first; other URLs load as they are.
+  _renderImage(message, expanded) {
+    const url = _imageUrl(message);
+    if (!url) return null;
+    let entry = this._images.get(message.id);
+    if (!entry || entry.url !== url) {
+      const img = _el("img", {
+        class: "image",
+        alt: _t(this._hass, "card_image"),
+        loading: "lazy",
+        onerror: () => img.setAttribute("hidden", ""),
+        onclick: () => {
+          if (this._expanded.has(message.id)) this._expanded.delete(message.id);
+          else this._expanded.add(message.id);
+          this._render();
+        },
+      });
+      entry = { url, img };
+      this._images.set(message.id, entry);
+      if (url.startsWith("/")) {
+        this._hass
+          .callWS({ type: "auth/sign_path", path: url, expires: SIGN_EXPIRES_S })
+          .then((result) => {
+            img.src = result.path;
+          })
+          .catch((err) => console.error("[notify-history-card] signing failed", url, err));
+      } else {
+        img.src = url;
+      }
+    }
+    entry.img.classList.toggle("expanded", expanded);
+    return entry.img;
   }
 }
 

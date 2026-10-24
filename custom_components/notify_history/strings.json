@@ -71,6 +71,7 @@
     "card_load_more": "Load more",
     "card_delete": "Delete",
     "card_more_actions": "More actions",
+    "card_image": "Attached image",
     "card_failed_targets": "Failed: {targets}",
     "card_sent_to": "Sent to: {targets}",
     "card_not_found": "{entity} is not a notify history proxy.",

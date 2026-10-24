@@ -84,6 +84,8 @@ entity: notify.family
 
 The card updates live. Click a message to expand it, use the menu on a message to delete it. A warning icon marks messages that failed for at least one target; hover it to see which and why.
 
+A message whose `data` has an `image`, or an iOS `attachment` that is not audio or video, shows that image; click it to see it full size. The card loads the URL stored with the message, it does not keep a copy. A `/api/camera_proxy/...` URL therefore shows the camera's current frame, and a file the automation overwrites shows its latest version.
+
 ## Development
 
 ```sh

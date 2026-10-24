@@ -9,6 +9,9 @@
   targets missed the `data` or `target` of a `notify.<name>` call, such as a
   Companion App image.
 
+- **Images in the card.** A message sent with a Companion App `image` or iOS
+  `attachment` shows it, loaded from the stored URL.
+
 ## 0.1.0 - 2026-10-04
 
 ### Added
